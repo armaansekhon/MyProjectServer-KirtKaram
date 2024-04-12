@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet " href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://static-bundles.visme.co/forms/vismeforms-embed.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900" rel="stylesheet">
+    <style>
+        .ok{
+            color: green;
+        } 
+        .not-ok{
+            color:red;
+        }
+         /* .margin{
+          margin-left:250px;
+          float:right;
+        }
+        .marginpass{
+          margin-left:275px;
+          float:right;
+        }  */
+        .txtcolor{
+  text-decoration: #4AC6D2;
+}
+        .color{
+          background-color: black;
+        }
+        .montserrat-fonttouse {
+  font-family:"Montserrat";
+  font-optical-sizing: auto;
+  font-weight: 100px;
+  font-style:normal;
+}
+        /* .carousel-content {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  z-index: 20;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+} */
+
+/* 
+.carousel-caption {
+    position: absolute;
+    z-index: 1;
+    display:table;
+    width:100%;
+    height:100%;
+} */
+/* 
+.absolute-div {
+    position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+} */
+
+/* .carousel-caption h3 {
+    display:table-cell;
+    vertical-align: middle;
+    text-align:center;
+} */
+
+/* .item {
+    position:relative;
+} */
+
+
+
+    </style>
+    <script>
+        $(document).ready(function(){
+
+            $("#savebtn").click(function()
+            {
+              if($("#floatingInput").val()==""|| $("#floatingPassword").val()==""||$("#Usertype").val=="none")
+              {
+                alert("Fill all the fields");
+              }
+              else{
+                let obj={
+                    
+                    url:"/profile-save",
+                    data:{
+                        kuchEmail:$("#floatingInput").val(),
+                        passKuch:$("#floatingPassword").val(),
+                        utypeKuch:$("#usertype").val()
+                    }
+                }
+                    $.ajax(obj).done(
+                        function(resp){
+                        $("#status").html(resp);
+                        if(resp==="Status: Signed-up successfully")
+                         $("##status").addClass("ok").removeClass("not-ok");
+                         else
+                         $("##status").addClass("not-ok").removeClass("ok");
+                    }).fail(function(err){
+                      $("#status").html(err);
+              })
+                  }
+            });
+            // AJAX for checking the availability of email
+            $("#floatingInput").keyup(function()
+            {
+                let obj={
+                    
+                    url:"/check-email",
+                    data:{
+                        kuchEmail:$("#floatingInput").val(),
+                        //passKuch:$("#txtPwd").val(),
+                    }
+                }
+
+                    $.ajax(obj).done(
+                        function(resp){
+                        $("#checkem").html(resp);
+                         if(resp==="Email not available")
+                         $("#checkem").removeClass("ok").addClass("not-ok");
+                         else
+                         $("#checkem").addClass("ok").removeClass("not-ok");
+
+                    }).fail(
+                        function(err){
+                        alert(err);
+                    });
+            });
+            // AJAX for validations
+            $("#floatingInput").keyup(function(){
+            let email=$("#floatingInput").val();
+            var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+            
+            if(r.test(email)==false)    
+            {
+                $("#valid").html("(Invalid E-mail Format)").addClass("not-ok").removeClass("ok");
+            }
+            else
+            {
+                $("#valid").html("(Valid E-mail Format)").addClass("ok").removeClass("not-ok");
+            }
+          });
+           
+        // Ajax for Password Validation
+        $("#floatingPassword").keyup(function(){
+            let pass=$("#floatingPassword").val();
+
+            var r=/(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+
+            if(r.test(pass)==false)    
+            {
+                $("#validPass").html("Invalid").addClass("not-ok").removeClass("ok");
+            }
+            else
+            {
+                $("#validPass").html("Valid").addClass("ok").removeClass("not-ok");
+            }
+
+        });
+        // AJAX for Login
+        $("#loginsave").click(function()
+            {
+              if($("#loginemail").val()==""|| $("#loginPassword").val()=="")
+              {
+                alert("Fill all the fields");
+              }
+              else{
+                let obj={
+                    
+                    url:"/check-login",
+                    data:{
+                        Email:$("#loginemail").val(),
+                        pass:$("#loginPassword").val(),
+                        
+                    }
+                }
+                    $.ajax(obj).done(
+                        function(resp){
+                        alert(resp);
+                        if(resp=="Coustumer")
+                        {
+                          location.href="Customer-dash.html";
+                          localStorage.setItem("user",$("#loginemail").val());
+                        }
+                        else if(resp=="Worker"){
+                          location.href="worker-dash.html";
+                          localStorage.setItem("user",$("#loginemail").val());
+                        }
+                    }).fail(function(err){
+
+                      alert(err);
+                      
+              })
+                  }
+            });
+
+         });
+    </script>
+    
+    
+</head>
+<body class="montserrat-fonttouse">
+    
+        <nav class="navbar navbar-expand-lg navbar-light  fixed-top  " >
+            <div class="container-fluid">
+              <a class="navbar-brand " href="#"><span class="text-info">Kirt</span><span>karam.com</span></a>
+              <div class="collapse navbar-collapse mr-auto" id="navbarNavAltMarkup">
+                <div class="navbar-nav mx-auto">
+                    <a class="nav-item nav-link active" href="#">Home <span class="sr-only"></span></a>
+                    <a class="nav-item nav-link" href="#">About</a>
+                    <a class="nav-item nav-link" href="#">Community</a>
+                    <a class="nav-item nav-link" href="#">Team</a>
+                  
+                </div>
+            </div>
+
+             
+              <div class="d-flex " > <!-- this was used to shift items to the right of the navbar -->
+                <p class="socials  mx-3 my-2 ">
+                  <i class="bi bi-twitter text-dark mx-1"></i>
+                  <i class="bi bi-facebook text-dark mx-1"></i>
+                  <i class="bi bi-linkedin text-dark mx-1"></i>
+                  <i class="bi bi-instagram text-dark mx-1"></i>
+  
+                </p>
+               
+                              
+                <!-- data-bs-target is used to access modal onclicking button -->
+                <button class="btn btn-outline-info " type="button"data-bs-toggle="modal" data-bs-target="#staticBackdrop">Sign-Up</button>
+                <button class="btn btn-outline-info" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 20px;">Login</button>
+              </div>
+    </div>
+</nav>
+
+  <!-- CRousal -->
+  <div id="carouselExampleCaptions" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="pics/architect-1080592.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption ">
+          <h5>Together We Find</h5>
+          <p>best Workers to your doors</p>
+          <p><a href="#" class="btn btn-info mt-3">Learn-More</a></p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="pics/Clean-Office-Help-Increase-Employee-Productivity.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption">
+          <h5> We Care</h5>
+          <p>about you and your time lets make it worth</p>
+          <p><a href="#" class="btn btn-info mt-3">Learn-More</a></p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="pics/house-1867187.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption">
+          <h5>Life goes Easy  </h5>
+          <p>Find the best worker and the best Coustumers at your desk</p>
+          <p><a href="#" class="btn btn-info mt-3">Learn-More</a></p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- about -->
+  <section id="about" class="about section-padding">
+    <div class="container">
+      <div class="row">
+        
+        <div class="col-lg-4 col-md-12 col-12">
+          <div class="about-img">
+            <img src="pics/team-working-together-project.jpg" alt="" class="img-fluid">
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
+          <div class="about-text">
+            <span><h2>About us</h2></span>
+            <h2>We Provide Best Quality <br>Service ever</h2>
+            <p>Welcome to KirtKaram, where we bridge the gap between 
+              those in need of reliable workers and skilled individuals seeking employment opportunities
+              . Our platform is dedicated to simplifying the process of finding help for daily chores, repairs, gardening, and more, while also providing a platform for workers to showcase their expertise and connect with potential employers.
+               With a commitment to excellence and a passion for fostering meaningful connections,
+                KirtKaram is here to empower both customers and workers to achieve their goals efficiently and effectively.
+            <p><a href="#" class="btn btn-info mt-3"> Learn-More</a></p>
+
+          </div>
+        </div>
+      </div>  
+    </div>
+
+  </section>
+
+  <section id="services" class="services section padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-header text-center pb-5">
+            <h2>Our Services </h2>
+            <p>
+              Discover a range of services tailored to your needs.
+               From finding skilled workers for daily chores to offering job opportunities
+                for handyman tasks, KirtKaram provides a seamless platform to meet your requirements. Explore our offerings and connect with trusted professionals today.
+              
+              
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-12 col-lg-4">
+          <div class="card text-white text-center bg-dark pb-2">
+            <div class="card-body">
+              <i class="bi bi-person-badge"></i>
+              <h3 class="card-title">Available 24/7</h3>
+              <p class="lead">"Our live 24/7 service ensures that assistance is available whenever you need it, day or night.
+                 Whether it's an urgent repair or a last-minute task, count on us to provide reliable support around the clock."</p>
+                 <button class="btn btn-outline-info ">Read more</button>
+            </div>
+           
+          </div>
+
+
+        </div> 
+
+        <div class="col-12 col-md-12 col-lg-4">
+          <div class="card text-white text-center bg-dark pb-2">
+            <div class="card-body">
+              <i class="bi bi-search"></i>
+              <h3 class="card-title">Find the Best nearby</h3>
+              <p class="lead">"Discover the best nearby workers 
+                with our intuitive platform. We leverage location-based 
+                technology to connect you with skilled professionals in your area, 
+                ensuring convenience and prompt service delivery.</p>
+                 <button class="btn btn-outline-info ">Read more</button>
+            </div>
+           
+          </div>
+
+
+        </div>
+
+        <div class="col-12 col-md-12 col-lg-4">
+          <div class="card text-white text-center bg-dark pb-2">
+            <div class="card-body">
+              <i class="bi bi-tools"></i>
+              <h3 class="card-title">Work Professionally</h3>
+              <p class="lead">"Experience professionalism at its finest with our vetted 
+                and experienced workers.Detailed efficient task completion,
+                 our professionals are dedicated to delivering top-quality workmanship for every job.</p>
+                 <button class="btn btn-outline-info ">Read more</button>
+            </div>
+           
+          </div>
+
+
+        </div>
+       </div>
+    </div>
+
+  </section>
+  <!-- teamm..... -->
+  <section id="team" class="team section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-header text-center pb-5">
+            <h2>Developers</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores mollitia velit dolorum enim iusto ea laboriosam adipisci ut numquam sapiente 
+              dignissimos quo, nostrum possimus asperiores animi tempore modi est ipsam?</p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8 col-md-6 col-lg-6">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="card-title py-2">Developed By</h3>
+              <img src="pics/NEXT.jpg" alt="" class=" arm img-fluid rounded-circle">
+              <p class="card-text">
+                <h2>Armaan Singh</h2>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, provident unde expedita aperiam porro, ex nulla harum a ullam
+                 reprehenderit totam! Corrupti qui dolorem quod dolor. Rerum expedita cum a.
+              </p>
+              <p class="socials">
+                <i class="bi bi-twitter text-dark mx-1"></i>
+                <i class="bi bi-facebook text-dark mx-1"></i>
+                <i class="bi bi-linkedin text-dark mx-1"></i>
+                <i class="bi bi-instagram text-dark mx-1"></i>
+
+              </p>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-8 col-md-6 col-lg-6">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="card-title py-2">Under Guidence Of</h3>
+              <img src="pics/sir.jpg" alt="" class=" arm img-fluid rounded-circle">
+              <p class="card-text">
+                <h2>Mr Rajesh Bansal</h2>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, provident unde expedita aperiam porro, ex nulla harum a ullam
+                 reprehenderit totam! Corrupti qui dolorem quod dolor. Rerum expedita cum a.lkdnfndsfdsknfdsfklndsfkndskfn kdnfksdnfkdskfndsfnds
+              </p>
+              <p class="socials">
+                <i class="bi bi-twitter text-dark mx-1"></i>
+                <i class="bi bi-facebook text-dark mx-1"></i>
+                <i class="bi bi-linkedin text-dark mx-1"></i>
+                <i class="bi bi-instagram text-dark mx-1"></i>
+
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- contact us -->
+  
+    <div class="container">
+
+      <div class=" container-fluid text-center">
+        <h2>Reach-Us</h2></div>
+        
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7386.803516151149!2d75.08359530811651!3d29.978489936457077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39112913c266edd9%3A0x150d7e1d63249852!2sYadavindra%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1712749377414!5m2!1sen!2sin" width="1125" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="visme_d" data-title="Untitled Project" data-url="dm03yp41-untitled-project" data-domain="forms" data-full-page="false" data-min-height="500px" data-form-id="55674"></div>
+        </div>
+       
+      
+    </div>
+
+  
+  
+  
+   
+    
+  
+
+
+
+<!--  SIGN_UPModal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 " id="staticBackdropLabel"  ;>Sign_Up</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-3">
+          
+            <input type="email" class="form-control mb-3" id="floatingInput" placeholder="name@example.com">
+            <span id="checkem"></span>
+            <label for="floatingInput">Email address</label>
+            <span id="valid" class="margin" ></span>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control mb-3" id="floatingPassword" placeholder="Password"><span id="validPass" class="marginpass" ></span>
+            <label for="floatingPassword">Password</label>
+
+          </div>
+          <select class="form-select mb-3" aria-label="Default select example" id="usertype">
+            <option selected>Select User Type</option>
+            <option value="Coustumer">Coustumer</option>
+            <option value="Worker">Worker</option>
+            
+          </select>
+          <span id="status" >Status:</span>
+          
+          </div>
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-outline-info mx-auto p-2"  id="savebtn">Sign-Up</button>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- LOGIN_modAL -->
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" id="loginemail" placeholder="name@example.com">
+          <label for="loginemail">Email address</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+          <label for="loginPassword">Password</label>
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span id="loginstat" >*</span>
+        <button type="button" id="loginsave" class="btn btn-outline-info mx-auto p-2" >Login</button>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    
+
+</body>
+</html>

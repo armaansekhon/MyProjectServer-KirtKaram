@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<script>
+
+        function doprevimg(reffile, refimg) {
+            const [file] = reffile.files;
+            if (file) {
+                refimg.src = URL.createObjectURL(file);
+            }
+
+        }
+    
+</script>
+<script>
+  $(document).ready(function(){
+      $("#wsearch").click(function(){
+              let obj={
+                  url:"/workprofilefetch",
+                  data:{
+                      koiemail:$("#inputEmail4").val(),
+                  }
+              }
+              $.ajax(obj).done(function(resultJsonAry){
+                  alert(JSON.stringify(resultJsonAry)); 
+          $("#prev").prop("src","uploads/"+resultJsonAry[0].proof);
+          $("#wname").val(resultJsonAry[0].name);//use table col
+          $("#wcon").val(resultJsonAry[0].contact);//use table col
+          $("#wgen").val(resultJsonAry[0].gender);
+          $("#wcat").val(resultJsonAry[0].category);
+          $("#wfirm").val(resultJsonAry[0].firm);
+          $("#wweb").val(resultJsonAry[0].website);
+          $("#wloc").val(resultJsonAry[0].location);
+          $("#wsince").val(resultJsonAry[0].since);
+          $("#hdn").val(resultJsonAry[0].pic);
+
+
+              }).fail(function(err){
+          alert(err);
+         }) 
+      })
+  });
+</script>
+<style>
+    .color{
+        /* background-color: lightblue; */
+        background-color: #ffffff;
+            margin: auto;
+            margin-top: 50px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+    }
+    p{
+        text-align: center;
+    }
+    .space{
+      margin-bottom: 10px;
+    }
+    
+</style>
+
+<body>
+    <div class="container">
+        <div class="container-fluid w-85 color  ">
+            <p  style="font-size: xx-large ;; " >Profile</p>
+            <form class="row g-3" action="/workprofile-save" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="hdn" id="hdn">
+                <div class="col-md-6">
+                  <label for="inputEmail4" class="form-label">Email</label>
+                  <input type="email" class="form-control" name="eemail" id="inputEmail4">
+                </div>
+                <div class="col-md-4">
+                <br>
+                    <input style="margin-top: 9px; margin-left:30px;" type="button" class="btn btn-outline-info" id="wsearch" value="Search"></input>
+                </div>
+                <div class="row gx-4 gy-3 ">
+                    <div class="col-md-4">
+                        <label for="wname" class="form-label">Name</label>
+                        <input type="text" class="form-control"  name="wname" id="wname">
+                      </div>
+                      <!-- <div class="col-1"></div> -->
+                       <div class="col-md-2 ">
+                    <label for="wcon" class="form-label">Contact-Number</label>
+                    <input type="text" class="form-control" name="wcon" id="wcon" placeholder="91****1***2">
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="wgen" class="form-label">Gender</label>wcat
+                    <select class="form-select" aria-label="Default select example" id="wgen" name="wgen">
+                        <option selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                      </select>
+                  </div>
+                  <div class="row gx-4 gy-3 ">
+                    <div class="col-md-4">
+                        <label for="wcat" class="form-label">Category</label>
+                        <select class="form-select" aria-label="Default select example" id="wcat" name="wcat">
+                            <option selected>Select Category</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Sweeper">Sweeper</option>
+                            <option value="Chef/Cook">Chef/Cook</option>
+                            <option value="Electrician">Home-Worker</option>
+                            <option value="Plumber">Plumber</option>
+                            <option value="Carpenter">Carpenter</option>
+                            <option value="painter">painter</option>
+                            <option value="painter">Interior-Designer</option>
+                            <option value="Maison">Masion</option>
+                            
+                          </select>
+                      </div>
+                    <div class="col-md-4 ">
+                        <label for="wweb" class="form-label">Website(if-any)</label>
+                        <input type="text" class="form-control" id="wweb" name="wweb">
+                      </div>
+                       
+                 <div class="col-md-4">
+                    <label for="wfirm" class="form-label">Firm(if-any)</label>
+                    <input type="text" class="form-control" id="wfirm" name="wfirm" placeholder=>
+                  </div>
+
+                  
+
+                      
+                </div>
+                <div class="row gx-4 gy-3 ">
+                 
+                  <div class="col-md-8 ">
+                      <label for="wloc" class="form-label">Location/Firm-Addresss</label>
+                      <input type="text" class="form-control" id="wloc" name="wloc">
+                    </div>
+                     
+               <div class="col-md-4">
+                  <label for="wfirm" class="form-label">Since</label>
+                  <input type="text" class="form-control" id="wsince" name="wsince" placeholder=>
+                </div>
+
+
+
+                    
+              </div>
+              <div class="row gx-4 gy-3 ">
+                <div class="col">ID-proof</div>
+              
+                <div class="col-md-2">
+                <p class="para"><input type="file" name="ppic" onchange="doprevimg(this,prev)">
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <img  class="img1"src="" alt="" id="prev" width="300px" height="200px">
+                </p>
+                </div>
+                <div class="col-md-8">
+                  <label for="wwhat" class="form-label">Specialization/ Previous-Work</label>
+                  <textarea  class="form-control"  name="wwhat" id="wwhat" placeholder="brief about the work to be done "> </textarea>
+                </div>
+                </div>
+                
+             
+              </div>
+               
+               
+               
+                <div class="row gx-3 gy-2"><div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                      Check me out
+                    </label>
+                  </div></div>
+                
+                </div>
+                <div class="row gx-3 gy-2 text-center">
+                  <div>
+                    <button type="submit" class="btn btn-outline-info">upload-Data</button>
+                    <button type="submit" class="btn btn-outline-info" formaction="/workupdate">Edit-my-Info</button>
+                  </div>
+                 
+                </div>
+               
+              </form>
+        </div>
+    </div>
+    
+</body>
+</html>
